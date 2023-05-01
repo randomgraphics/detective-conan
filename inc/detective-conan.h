@@ -17,10 +17,12 @@
     #define DC_API extern "C" __attribute__((visibility("default")))
 #endif
 
+#define DC_IMPL_COMPOSE_API_TAG(api) DC_IMPL_API##api
+
 #define DC_IMPL_API_VULKAN 1
 #define DC_IMPL_API_D3D12  2
-#define DC_IMPL_IS_VULKAN  (DC_IMPL_API##DETECTIVE_CONAN_GRAPHICS_API == DC_IMPL_API_VULKAN)
-#define DC_IMPL_IS_D3D12   (DC_IMPL_API##DETECTIVE_CONAN_GRAPHICS_API == DC_IMPL_API_D3D12)
+#define DC_IMPL_IS_VULKAN  (DC_IMPL_COMPOSE_API_TAG(DETECTIVE_CONAN_GRAPHICS_API) == DC_IMPL_API_VULKAN)
+#define DC_IMPL_IS_D3D12   (DC_IMPL_COMPOSE_API_TAG(DETECTIVE_CONAN_GRAPHICS_API) == DC_IMPL_API_D3D12)
 
 struct DetectiveConan;
 
@@ -61,6 +63,6 @@ DC_API void fire(DetectiveConan *);
 
 DC_API void checkpoint(const CheckPointInfo *);
 
-DC_API Report * investigate(const DetectiveConan *);
+DC_API Report * investigate(DetectiveConan *);
 
 DC_API void closeReport(Report *);
