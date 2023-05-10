@@ -1,0 +1,7 @@
+set(CMAKE_CXX_STANDARD 20)
+
+find_package(Vulkan)
+if (Vulkan_FOUND)
+    add_executable(hello-world-vulkan hello-world-vulkan.cpp)
+    target_include_directories(hello-world-vulkan PUBLIC ../../inc ../3rd-party/rapid-vulkan/inc ${Vulkan_INCLUDE_DIRS})
+endif()

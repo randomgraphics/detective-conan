@@ -1,9 +1,4 @@
+# detecitve-conan is a header only library. This is only to build the tests.
+cmake_minimum_required(VERSION 3.16)
 project(detective-conan)
-
-option(DETECTIVE_CONAN_BUILD_DEV "Build tests" ON)
-
-add_subdirectory(src)
-
-if(DETECTIVE_CONAN_BUILD_DEV)
-    add_subdirectory(dev)
-endif()
+add_subdirectory(dev/test)

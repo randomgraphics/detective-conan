@@ -1,0 +1,17 @@
+#version 450
+
+// Declare a buffer with a single 64-bit integer
+layout (std430, binding = 0) buffer OutputBuffer {
+    uint outputValue;
+};
+
+// Declare a push constant block with a single 64-bit integer
+layout (push_constant) uniform PushConstants {
+    uint inputValue;
+} pushConstants;
+
+// Entry point for the compute shader
+void main() {
+    // Atomically set the output value to the value from the push constant
+    atomicExchange(outputValue, pushConstants.inputValue);
+}
