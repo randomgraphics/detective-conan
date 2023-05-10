@@ -1,5 +1,5 @@
 #ifndef NDEBUG
-#define RAPID_VULKAN_ENABLE_DEBUG_BUILD 1
+    #define RAPID_VULKAN_ENABLE_DEBUG_BUILD 1
 #endif
 #define RAPID_VULKAN_IMPLEMENTATION
 #define RAPID_VULKAN_ENABLE_LOADER 1
@@ -21,8 +21,8 @@ int main() {
     auto instance  = Instance({});
     auto device    = Device({instance});
     auto gi        = device.gi();
-    auto noop      = Shader({"noop", gi, {sizeof(noop_comp) / sizeof(uint32_t), (const uint32_t*)noop_comp}});
-    auto infinite  = Shader({"infinite", gi, {sizeof(infinite_comp) / sizeof(uint32_t), (const uint32_t*)infinite_comp}});
+    auto noop      = Shader({"noop", gi, {sizeof(noop_comp) / sizeof(uint32_t), (const uint32_t *) noop_comp}});
+    auto infinite  = Shader({"infinite", gi, {sizeof(infinite_comp) / sizeof(uint32_t), (const uint32_t *) infinite_comp}});
     auto pipeline1 = ComputePipeline({"noop", noop});
     auto pipeline2 = ComputePipeline({"infinite", infinite});
 
