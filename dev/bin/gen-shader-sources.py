@@ -55,8 +55,8 @@ def recompile():
         if p.returncode != 0: utils.loge(f"failed to compile {s}. ReturnCode = {p.returncode}")
 
 def clean():
-    print(f"Delete all .spriv files in {output_dir}")
-    outputs = output_dir.glob("*.spirv")
+    print(f"Delete all .spv files in {output_dir}")
+    outputs = output_dir.glob("*.spv")
     count = 0
     for o in outputs:
         o.unlink()
