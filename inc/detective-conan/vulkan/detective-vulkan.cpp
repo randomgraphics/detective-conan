@@ -212,7 +212,7 @@ DetectiveConan * hireVulkan(const VulkanContract & c) { return team.hire(std::ma
 
 // ---------------------------------------------------------------------------------------------------------------------
 //
-void insertVulkanCheckpoint(const VulkanCheckPointInfo & cpi) {
+void cmdInsertVulkanCheckpoint(const VulkanCheckPointInfo & cpi) {
     auto p = team.validate(cpi.detective);
     if (!p) return;
     return p->insertCheckpoint(cpi);

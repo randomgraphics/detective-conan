@@ -48,7 +48,7 @@ struct VulkanCheckPointInfo : public CheckPointInfo {
 
 DetectiveConan * hireVulkan(const VulkanContract &);
 
-void insertVulkanCheckpoint(const VulkanCheckPointInfo &);
+void cmdInsertVulkanCheckpoint(const VulkanCheckPointInfo &);
 
 #endif
 

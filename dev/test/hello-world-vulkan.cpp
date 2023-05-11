@@ -27,19 +27,19 @@ int main() {
     auto pipeline2 = ComputePipeline({"infinite", infinite});
 
     dc::VulkanContract contract;
-    contract.allocator = gi.allocator;
-    contract.instance  = gi.instance;
-    contract.physical  = gi.physical;
-    contract.device    = gi.device;
+    contract.allocator = gi->allocator;
+    contract.instance  = gi->instance;
+    contract.physical  = gi->physical;
+    contract.device    = gi->device;
     auto detective     = dc::hireVulkan(contract);
 
     auto q = rapid_vulkan::CommandQueue({"main", gi, device.graphics()->family(), device.graphics()->index()});
     auto c = q.begin("main");
-    dc::insertVulkanCheckpoint({detective, "checkpoint 1", c->handle()});
-    pipeline1.dispatch(c->handle(), {1, 1, 1});
-    dc::insertVulkanCheckpoint({detective, "checkpoint 2", c->handle()});
-    pipeline2.dispatch(c->handle(), {1, 1, 1}); // this will hang GPU.
-    dc::insertVulkanCheckpoint({detective, "checkpoint 3", c->handle()});
+    dc::cmdInsertVulkanCheckpoint({detective, "checkpoint 1", c->handle()});
+    pipeline1.cmdDispatch(c->handle(), {1, 1, 1});
+    dc::cmdInsertVulkanCheckpoint({detective, "checkpoint 2", c->handle()});
+    pipeline2.cmdDispatch(c->handle(), {1, 1, 1}); // this will hang GPU.
+    dc::cmdInsertVulkanCheckpoint({detective, "checkpoint 3", c->handle()});
     q.submit(c);
     q.wait();
 
