@@ -19,7 +19,7 @@ using namespace RAPID_VULKAN_NAMESPACE;
 
 int main() {
     auto instance  = Instance({});
-    auto device    = Device(instance);
+    auto device    = Device(instance.dcp());
     auto gi        = device.gi();
     auto noop      = Shader({{"noop"}, gi, {sizeof(noop_comp) / sizeof(uint32_t), (const uint32_t *) noop_comp}});
     auto infinite  = Shader({{"infinite"}, gi, {sizeof(infinite_comp) / sizeof(uint32_t), (const uint32_t *) infinite_comp}});

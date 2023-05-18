@@ -77,7 +77,7 @@ function global:get-git-branch {
 # redefine prompt function
 function global:prompt {
     write-host -ForegroundColor Green "==== detective-conan - " -NoNewline
-    write-host -ForegroundColor Blue "$DC_ROOT" -NoNewline
+    write-host -ForegroundColor Blue "$DETECTIVE_CONAN_ROOT" -NoNewline
     write-host -ForegroundColor Green " - " -NoNewline
     write-host -ForegroundColor Yellow "$(get-git-branch)" -NoNewline
     write-host -ForegroundColor Green " ===="
@@ -89,18 +89,18 @@ function global:prompt {
 # Get the root directory
 # ==============================================================================
 
-# note: $DC_ROOT is a global variable that could be used in other places outside of this script.
-$global:DC_ROOT=split-path -parent $PSScriptRoot|split-path -parent
-$env:DC_ROOT=$DC_ROOT
+# note: $DETECTIVE_CONAN_ROOT is a global variable that could be used in other places outside of this script.
+$global:DETECTIVE_CONAN_ROOT=split-path -parent $PSScriptRoot|split-path -parent
+$env:DETECTIVE_CONAN_ROOT=$DETECTIVE_CONAN_ROOT
 
 # ==============================================================================
 # setup aliases
 # ==============================================================================
-if( Test-Path -path "$DC_ROOT\dev\env\alias.powershell.txt" )
+if( Test-Path -path "$DETECTIVE_CONAN_ROOT\dev\env\alias.powershell.txt" )
 {
     # create script block for all aliases
     $aliases = ""
-    get-content "$DC_ROOT\dev\env\alias.powershell.txt"|foreach {
+    get-content "$DETECTIVE_CONAN_ROOT\dev\env\alias.powershell.txt"|foreach {
         $name, $value = $_.split(' ')
         $body = ([System.String]$value).Trim( ' "' )
         $aliases = $aliases +
@@ -115,27 +115,27 @@ if( Test-Path -path "$DC_ROOT\dev\env\alias.powershell.txt" )
 }
 else
 {
-	warn "$DC_ROOT\dev\env\alias.txt is missing."
+	warn "$DETECTIVE_CONAN_ROOT\dev\env\alias.txt is missing."
 }
 
 # ==============================================================================
 # setup git
 # ==============================================================================
 
-git config --local include.path ${DC_ROOT}/.gitconfig
+git config --local include.path ${DETECTIVE_CONAN_ROOT}/.gitconfig
 
 # ==============================================================================
 # MISC
 # ==============================================================================
 
 # Setup PATH
-$env:Path = "$DC_ROOT\dev\bin;$env:Path"
+$env:Path = "$DETECTIVE_CONAN_ROOT\dev\bin;$env:Path"
 
 # update title
-$Host.UI.RawUI.WindowTitle = "DC3d ( $DC_ROOT )"
+$Host.UI.RawUI.WindowTitle = "DC3d ( $DETECTIVE_CONAN_ROOT )"
 
 # change current location
-set-location $DC_ROOT
+set-location $DETECTIVE_CONAN_ROOT
 
 #reset some command line color
 Set-PSReadlineOption -Colors @{
@@ -150,7 +150,7 @@ Set-PSReadlineOption -Colors @{
 write-host -ForegroundColor green "
 Detecitve-Conan build environment ready to use. Happy coding!
 
-DC_ROOT     = $env:DC_ROOT
+DETECTIVE_CONAN_ROOT     = $env:DETECTIVE_CONAN_ROOT
 VULKAN_SDK  = $env:VULKAN_SDK
 USERNAME    = $env:USERNAME
 "
