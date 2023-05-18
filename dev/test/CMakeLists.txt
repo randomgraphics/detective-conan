@@ -1,5 +1,4 @@
-set(CMAKE_CXX_STANDARD 20)
-
+set(CMAKE_CXX_STANDARD 17)
 find_package(Vulkan)
 if (Vulkan_FOUND)
     add_executable(hello-world-vulkan hello-world-vulkan.cpp)
