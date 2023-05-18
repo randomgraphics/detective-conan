@@ -126,11 +126,10 @@ void DetectiveVulkan::allocatePipeline() {
                                           .setStageFlags(vk::ShaderStageFlagBits::eCompute);
     _descriptorSetLayout =
         _contract.device.createDescriptorSetLayoutUnique(vk::DescriptorSetLayoutCreateInfo().setBindingCount(1).setPBindings(&descriptorSetLayoutBinding));
-    _pipelineLayout = _contract.device.createPipelineLayoutUnique(
-        vk::PipelineLayoutCreateInfo()
-            .setSetLayouts({_descriptorSetLayout.get()})
-            .setPushConstantRangeCount(1)
-            .setPPushConstantRanges(&(vk::PushConstantRange().setStageFlags(vk::ShaderStageFlagBits::eCompute).setOffset(0).setSize(sizeof(PushConstant)))));
+    std::array layouts {_descriptorSetLayout.get()};
+    _pipelineLayout =
+        _contract.device.createPipelineLayoutUnique(vk::PipelineLayoutCreateInfo().setSetLayouts(layouts).setPushConstantRangeCount(1).setPPushConstantRanges(
+            &(vk::PushConstantRange().setStageFlags(vk::ShaderStageFlagBits::eCompute).setOffset(0).setSize(sizeof(PushConstant)))));
 
     // create the compute pipeline object
     _pipeline =
@@ -148,15 +147,16 @@ void DetectiveVulkan::allocateDescriptorPool() {
 // ---------------------------------------------------------------------------------------------------------------------
 //
 void DetectiveVulkan::allocateDescriptorSet() {
-    auto allocInfo = vk::DescriptorSetAllocateInfo().setDescriptorPool(_pool.get()).setSetLayouts({_descriptorSetLayout.get()});
-    _set           = _contract.device.allocateDescriptorSets(allocInfo)[0];
-    auto bi        = vk::DescriptorBufferInfo().setBuffer(_buffer.get()).setOffset(0).setRange(BUFFER_SIZE);
+    std::array layouts {_descriptorSetLayout.get()};
+    auto       allocInfo = vk::DescriptorSetAllocateInfo().setDescriptorPool(_pool.get()).setSetLayouts(layouts);
+    _set                 = _contract.device.allocateDescriptorSets(allocInfo)[0];
+    std::array bi {vk::DescriptorBufferInfo().setBuffer(_buffer.get()).setOffset(0).setRange(BUFFER_SIZE)};
     _contract.device.updateDescriptorSets({vk::WriteDescriptorSet()
                                                .setDstSet(_set)
                                                .setDstBinding(0)
                                                .setDescriptorCount(1)
                                                .setDescriptorType(vk::DescriptorType::eStorageBuffer)
-                                               .setBufferInfo({bi})},
+                                               .setBufferInfo(bi)},
                                           {});
 }
 
@@ -167,7 +167,7 @@ vk::UniqueDeviceMemory allocateDeviceMemory(const VulkanContract & c, const vk::
     vk::PhysicalDeviceMemoryProperties memProperties;
     c.physical.getMemoryProperties(&memProperties);
 
-    uint32_t memoryIndex = UINT_MAX;
+    uint32_t memoryIndex = uint32_t(-1);
     for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
         if (0 == (memRequirements.memoryTypeBits & (1 << i))) continue;
         auto propFlags = memProperties.memoryTypes[i].propertyFlags;
