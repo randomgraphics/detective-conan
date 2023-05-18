@@ -150,7 +150,7 @@ Set-PSReadlineOption -Colors @{
 write-host -ForegroundColor green "
 Detecitve-Conan build environment ready to use. Happy coding!
 
-DETECTIVE_CONAN_ROOT     = $env:DETECTIVE_CONAN_ROOT
-VULKAN_SDK  = $env:VULKAN_SDK
-USERNAME    = $env:USERNAME
+DETECTIVE_CONAN_ROOT = $env:DETECTIVE_CONAN_ROOT
+VULKAN_SDK           = $env:VULKAN_SDK
+USERNAME             = $env:USERNAME
 "
