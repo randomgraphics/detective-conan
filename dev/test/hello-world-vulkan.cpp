@@ -21,10 +21,10 @@ int main() {
     auto instance  = Instance({});
     auto device    = Device(instance.dcp());
     auto gi        = device.gi();
-    auto noop      = Shader({{"noop"}, gi, {sizeof(noop_comp) / sizeof(uint32_t), (const uint32_t *) noop_comp}});
-    auto infinite  = Shader({{"infinite"}, gi, {sizeof(infinite_comp) / sizeof(uint32_t), (const uint32_t *) infinite_comp}});
-    auto pipeline1 = ComputePipeline({{"noop"}, noop});
-    auto pipeline2 = ComputePipeline({{"infinite"}, infinite});
+    auto noop      = Shader(Shader::ConstructParameters {{"noop"}, gi}.setSpirv(noop_comp));
+    auto infinite  = Shader(Shader::ConstructParameters {{"infinite"}, gi}.setSpirv(infinite_comp));
+    auto pipeline1 = ComputePipeline({{"noop"}, &noop});
+    auto pipeline2 = ComputePipeline({{"infinite"}, &infinite});
 
     dc::VulkanContract contract;
     contract.allocator = gi->allocator;
@@ -40,7 +40,7 @@ int main() {
     dc::cmdInsertVulkanCheckpoint({detective, "checkpoint 2", c});
     pipeline2.cmdDispatch(c, {1, 1, 1}); // this will hang GPU.
     dc::cmdInsertVulkanCheckpoint({detective, "checkpoint 3", c});
-    q.submit(c);
+    q.submit({c});
     q.wait();
 
     auto report = investigate(detective);
