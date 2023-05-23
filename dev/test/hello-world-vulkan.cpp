@@ -1,8 +1,4 @@
-#ifndef NDEBUG
-#define RAPID_VULKAN_ENABLE_DEBUG_BUILD 1
-#endif
 #define RAPID_VULKAN_IMPLEMENTATION
-#define RAPID_VULKAN_ENABLE_LOADER 1
 #include <rapid-vulkan/rapid-vulkan.h>
 
 #define DETECTIVE_CONAN_IMPLEMENTATION
@@ -18,8 +14,8 @@
 using namespace RAPID_VULKAN_NAMESPACE;
 
 int main() {
-    auto instance  = Instance({});
-    auto device    = Device(instance.dcp());
+    auto instance  = Instance({.validation = true});
+    auto device    = Device(instance.dcp().setValidation(Device::LOG_ON_VK_ERROR));
     auto gi        = device.gi();
     auto noop      = Shader(Shader::ConstructParameters {{"noop"}, gi}.setSpirv(noop_comp));
     auto infinite  = Shader(Shader::ConstructParameters {{"infinite"}, gi}.setSpirv(infinite_comp));
@@ -33,13 +29,14 @@ int main() {
     contract.device    = gi->device;
     auto detective     = detcon::hireVulkan(contract);
 
-    auto q = rapid_vulkan::CommandQueue({{"main"}, gi, device.graphics()->family(), device.graphics()->index()});
+    auto q = CommandQueue({{"main"}, gi, device.graphics()->family(), device.graphics()->index()});
     auto c = q.begin("main");
     detcon::cmdInsertVulkanCheckpoint({detective, "checkpoint 1", c});
     pipeline1.cmdDispatch(c, {1, 1, 1});
     detcon::cmdInsertVulkanCheckpoint({detective, "checkpoint 2", c});
     pipeline2.cmdDispatch(c, {1, 1, 1}); // this will hang GPU.
     detcon::cmdInsertVulkanCheckpoint({detective, "checkpoint 3", c});
+    printf("\nBe patient. We are generating an artificial hang on GPU. It could take a few seconds for the app to continue.\n");
     q.submit({c});
     q.wait();
 
