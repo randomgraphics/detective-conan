@@ -22,20 +22,20 @@ int main() {
     auto pipeline1 = ComputePipeline({{"noop"}, &noop});
     auto pipeline2 = ComputePipeline({{"infinite"}, &infinite});
 
-    detcon::VulkanContract contract;
+    detcon::vulkan::Contract contract;
     contract.allocator = gi->allocator;
     contract.instance  = gi->instance;
     contract.physical  = gi->physical;
     contract.device    = gi->device;
-    auto detective     = detcon::hireVulkan(contract);
+    auto detective     = detcon::vulkan::hire(contract);
 
     auto q = CommandQueue({{"main"}, gi, device.graphics()->family(), device.graphics()->index()});
     auto c = q.begin("main");
-    detcon::cmdInsertVulkanCheckpoint({detective, "checkpoint 1", c});
+    detcon::vulkan::cmdInsertCheckpoint({detective, "checkpoint 1", c});
     pipeline1.cmdDispatch(c, {1, 1, 1});
-    detcon::cmdInsertVulkanCheckpoint({detective, "checkpoint 2", c});
+    detcon::vulkan::cmdInsertCheckpoint({detective, "checkpoint 2", c});
     pipeline2.cmdDispatch(c, {1, 1, 1}); // this will hang GPU.
-    detcon::cmdInsertVulkanCheckpoint({detective, "checkpoint 3", c});
+    detcon::vulkan::cmdInsertCheckpoint({detective, "checkpoint 3", c});
     q.submit({c});
 
     printf("\nBe patient. We are generating an artificial hang on GPU. It could take a few seconds for the app to continue.\n\n");

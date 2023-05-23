@@ -14,17 +14,16 @@ struct PushConstant {
 
 class DetectiveVulkan : public DetectiveConan {
 public:
-    DetectiveVulkan(const VulkanContract &);
+    DetectiveVulkan(const vulkan::Contract &);
     ~DetectiveVulkan() override {}
-
-    void insertCheckpoint(const CheckPointInfo &) override;
-    void fillReport(Report &) override;
+    void report(Report &) override;
+    void checkpoint(const vulkan::CheckPointInfo &);
 
 private:
     inline constexpr static uint64_t BUFFER_SIZE = 4; // 32-bit
 
     vk::Result                    _error = vk::Result::eSuccess;
-    VulkanContract                _contract;
+    vulkan::Contract              _contract;
     vk::UniqueDescriptorSetLayout _descriptorSetLayout;
     vk::UniquePipelineLayout      _pipelineLayout;
     vk::UniquePipeline            _pipeline;
@@ -43,7 +42,7 @@ private:
 
 // ---------------------------------------------------------------------------------------------------------------------
 //
-DetectiveVulkan::DetectiveVulkan(const VulkanContract & contract): _contract(contract) {
+DetectiveVulkan::DetectiveVulkan(const vulkan::Contract & contract): _contract(contract) {
     allocatePipeline();
     allocateBuffer();
     allocateDescriptorPool();
@@ -52,7 +51,7 @@ DetectiveVulkan::DetectiveVulkan(const VulkanContract & contract): _contract(con
 
 // ---------------------------------------------------------------------------------------------------------------------
 //
-void DetectiveVulkan::fillReport(Report & r) {
+void DetectiveVulkan::report(Report & r) {
     if (_error != vk::Result::eSuccess) {
         r.content = std::string("DetectiveVulkan internal error: ") + std::to_string((int) _error);
     } else {
@@ -75,11 +74,10 @@ void DetectiveVulkan::fillReport(Report & r) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 //
-void DetectiveVulkan::insertCheckpoint(const CheckPointInfo & cpi) {
+void DetectiveVulkan::checkpoint(const vulkan::CheckPointInfo & info) {
     if (_error != vk::Result::eSuccess) return;
     try {
-        auto info = (const VulkanCheckPointInfo *) &cpi;
-        auto cb   = info->commandBuffer;
+        auto cb = info.commandBuffer;
 
         {
             auto bmb = vk::BufferMemoryBarrier()
@@ -162,8 +160,8 @@ void DetectiveVulkan::allocateDescriptorSet() {
 
 // ---------------------------------------------------------------------------------------------------------------------
 /// TODO: Defer to VMA for memory allocations if it's enabled
-vk::UniqueDeviceMemory allocateDeviceMemory(const VulkanContract & c, const vk::MemoryRequirements & memRequirements, vk::MemoryPropertyFlags memoryProperties,
-                                            const vk::MemoryAllocateFlags allocFlags) {
+vk::UniqueDeviceMemory allocateDeviceMemory(const vulkan::Contract & c, const vk::MemoryRequirements & memRequirements,
+                                            vk::MemoryPropertyFlags memoryProperties, const vk::MemoryAllocateFlags allocFlags) {
     vk::PhysicalDeviceMemoryProperties memProperties;
     c.physical.getMemoryProperties(&memProperties);
 
@@ -208,14 +206,14 @@ void DetectiveVulkan::allocateBuffer() {
 
 // ---------------------------------------------------------------------------------------------------------------------
 //
-DetectiveConan * hireVulkan(const VulkanContract & c) { return team.hire(std::make_shared<detcon::DetectiveVulkan>(c)).get(); }
+DetectiveConan * vulkan::hire(const vulkan::Contract & c) { return team.hire(std::make_shared<DetectiveVulkan>(c)).get(); }
 
 // ---------------------------------------------------------------------------------------------------------------------
 //
-void cmdInsertVulkanCheckpoint(const VulkanCheckPointInfo & cpi) {
+void vulkan::cmdInsertCheckpoint(const vulkan::CheckPointInfo & cpi) {
     auto p = team.validate(cpi.detective);
     if (!p) return;
-    return p->insertCheckpoint(cpi);
+    return ((DetectiveVulkan *) p.get())->checkpoint(cpi);
 }
 
 } // namespace DETECTIVE_CONAN_NAMESPACE

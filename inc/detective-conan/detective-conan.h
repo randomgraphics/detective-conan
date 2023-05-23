@@ -43,44 +43,55 @@ namespace DETECTIVE_CONAN_NAMESPACE {
 
 struct DetectiveConan;
 
-struct CheckPointInfo {
-    /// The detective who is responsible for this check point.
-    DetectiveConan * detective;
-
-    /// Name of the check point. This name will be used in the report.
-    const char * name;
-};
-
 struct Report {
     std::string content;
 };
 
 #ifdef DETECTIVE_CONAN_SUPPORT_VULKAN
 
-struct VulkanContract {
+namespace vulkan {
+
+struct Contract {
     const vk::AllocationCallbacks * allocator {};
     vk::Instance                    instance {};
     vk::PhysicalDevice              physical {};
     vk::Device                      device {};
 };
 
-struct VulkanCheckPointInfo : public CheckPointInfo {
+struct CheckPointInfo {
+    /// @brief The detective who is responsible for this check point.
+    DetectiveConan * detective;
+
+    /// @brief Name of the check point. This name will be used in the report.
+    const char * name;
+
+    /// @brief The command buffer that the check point is inserted into.
     vk::CommandBuffer commandBuffer {};
 };
 
-DetectiveConan * hireVulkan(const VulkanContract &);
+DetectiveConan * hire(const Contract &);
 
-void cmdInsertVulkanCheckpoint(const VulkanCheckPointInfo &);
+void cmdInsertCheckpoint(const CheckPointInfo &);
+
+} // namespace vulkan
 
 #endif
 
 #ifdef DETECTIVE_CONAN_SUPPORT_D3D12
 
-struct DCD3D12Contract {
-    void * placeholder;
+namespace d3d12 {
+
+struct Contract {
+    /// @brief The detective who is responsible for this check point.
+    DetectiveConan * detective;
+
+    /// @brief Name of the check point. This name will be used in the report.
+    const char * name;
 };
 
-DetectiveConan * hireInsertD3D12(const D3D12Contract *);
+DetectiveConan * hire(const Contract *);
+
+} // namespace d3d12
 
 #endif
 

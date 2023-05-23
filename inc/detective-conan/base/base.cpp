@@ -7,8 +7,7 @@ namespace DETECTIVE_CONAN_NAMESPACE {
 
 struct DetectiveConan {
     virtual ~DetectiveConan() {}
-    virtual void insertCheckpoint(const CheckPointInfo &) = 0;
-    virtual void fillReport(Report &)                     = 0;
+    virtual void report(Report &) = 0;
 };
 
 struct TeamOnDuty {
@@ -36,7 +35,7 @@ struct TeamOnDuty {
         auto d = validate(p);
         if (!d) return {"Not the detective that I hired."};
         Report r;
-        p->fillReport(r);
+        p->report(r);
         return r;
     }
 
