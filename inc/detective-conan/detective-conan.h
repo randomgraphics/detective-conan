@@ -24,7 +24,8 @@ SOFTWARE.
 #ifndef DETECTIVE_CONAN_H__
 #define DETECTIVE_CONAN_H__
 
-/// The revision number that uniquely identifies the version of Detective Conan.
+/// The integer number that uniquely identifies the version of Detective Conan. This revision number in increased
+/// everytime a change to this header is mde on the main branch.
 #define DETECTIVE_CONAN_HEADER_REVISION 2
 
 /// \def DETECTIVE_CONAN_NAMESPACE
