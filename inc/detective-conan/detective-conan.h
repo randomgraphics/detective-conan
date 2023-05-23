@@ -27,8 +27,10 @@ SOFTWARE.
 /// The revision number that uniquely identifies the version of Detective Conan.
 #define DETECTIVE_CONAN_HEADER_REVISION 1
 
+/// \def DETECTIVE_CONAN_NAMESPACE
+/// \brief The namespace that all the symbols of Detective Conan are defined in. Default value is `detcon`.
 #ifndef DETECTIVE_CONAN_NAMESPACE
-#define DETECTIVE_CONAN_NAMESPACE dc
+#define DETECTIVE_CONAN_NAMESPACE detcon
 #endif
 
 #include <stdint.h>

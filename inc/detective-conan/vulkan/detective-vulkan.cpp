@@ -208,7 +208,7 @@ void DetectiveVulkan::allocateBuffer() {
 
 // ---------------------------------------------------------------------------------------------------------------------
 //
-DetectiveConan * hireVulkan(const VulkanContract & c) { return team.hire(std::make_shared<dc::DetectiveVulkan>(c)).get(); }
+DetectiveConan * hireVulkan(const VulkanContract & c) { return team.hire(std::make_shared<detcon::DetectiveVulkan>(c)).get(); }
 
 // ---------------------------------------------------------------------------------------------------------------------
 //
