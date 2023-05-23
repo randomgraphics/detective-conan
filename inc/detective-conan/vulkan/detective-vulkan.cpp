@@ -1,5 +1,5 @@
 #ifndef DETECTIVE_CONAN_SUPPORT_VULKAN
-    #define DETECTIVE_CONAN_SUPPORT_VULKAN
+#define DETECTIVE_CONAN_SUPPORT_VULKAN
 #endif
 #include "../detective-conan.h"
 #include "asset/atomic-counter.comp.spv.h"
