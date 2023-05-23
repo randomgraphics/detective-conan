@@ -36,8 +36,9 @@ int main() {
     detcon::cmdInsertVulkanCheckpoint({detective, "checkpoint 2", c});
     pipeline2.cmdDispatch(c, {1, 1, 1}); // this will hang GPU.
     detcon::cmdInsertVulkanCheckpoint({detective, "checkpoint 3", c});
-    printf("\nBe patient. We are generating an artificial hang on GPU. It could take a few seconds for the app to continue.\n");
     q.submit({c});
+
+    printf("\nBe patient. We are generating an artificial hang on GPU. It could take a few seconds for the app to continue.\n\n");
     q.wait();
 
     auto report = investigate(detective);
