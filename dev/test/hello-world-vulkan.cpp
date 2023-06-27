@@ -14,8 +14,8 @@
 using namespace RAPID_VULKAN_NAMESPACE;
 
 int main() {
-    auto instance  = Instance({.validation = true});
-    auto device    = Device(instance.dcp().setValidation(Device::LOG_ON_VK_ERROR));
+    auto instance  = Instance({.validation = Instance::Validation::LOG_ON_VK_ERROR});
+    auto device    = Device({instance});
     auto gi        = device.gi();
     auto noop      = Shader(Shader::ConstructParameters {{"noop"}, gi}.setSpirv(noop_comp));
     auto infinite  = Shader(Shader::ConstructParameters {{"infinite"}, gi}.setSpirv(infinite_comp));
@@ -29,17 +29,15 @@ int main() {
     contract.device    = gi->device;
     auto detective     = detcon::vulkan::hire(contract);
 
-    auto q = CommandQueue({{"main"}, gi, device.graphics()->family(), device.graphics()->index()});
-    auto c = q.begin("main");
+    auto q = device.graphics();
+    auto c = q->begin("main");
     detcon::vulkan::cmdInsertCheckpoint({detective, "checkpoint 1", c});
     pipeline1.cmdDispatch(c, {1, 1, 1});
     detcon::vulkan::cmdInsertCheckpoint({detective, "checkpoint 2", c});
     pipeline2.cmdDispatch(c, {1, 1, 1}); // this will hang GPU.
     detcon::vulkan::cmdInsertCheckpoint({detective, "checkpoint 3", c});
-    q.submit({c});
-
     printf("\nBe patient. We are generating an artificial hang on GPU. It could take a few seconds for the app to continue.\n\n");
-    q.wait();
+    q->submit({c}).wait();
 
     auto report = investigate(detective);
     std::cout << report.content << std::endl;
