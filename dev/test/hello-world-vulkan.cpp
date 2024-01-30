@@ -2,7 +2,6 @@
 #include <rapid-vulkan/rapid-vulkan.h>
 
 #define DETECTIVE_CONAN_IMPLEMENTATION
-#define DETECTIVE_CONAN_SUPPORT_VULKAN 1
 #include <detective-conan/detective-conan.h>
 
 #include <iostream>

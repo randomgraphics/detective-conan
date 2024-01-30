@@ -26,12 +26,18 @@ SOFTWARE.
 
 /// The integer number that uniquely identifies the version of Detective Conan. This revision number in increased
 /// everytime a change to this header is mde on the main branch.
-#define DETECTIVE_CONAN_HEADER_REVISION 2
+#define DETECTIVE_CONAN_HEADER_REVISION 3
 
 /// \def DETECTIVE_CONAN_NAMESPACE
 /// \brief The namespace that all the symbols of Detective Conan are defined in. Default value is `detcon`.
 #ifndef DETECTIVE_CONAN_NAMESPACE
 #define DETECTIVE_CONAN_NAMESPACE detcon
+#endif
+
+/// \def DETECTIVE_CONAN_SUPPORT_VULKAN
+/// \brief Whether to support Vulkan. Default value is 1. Define to 0 to disable Vulkan support.
+#ifndef DETECTIVE_CONAN_SUPPORT_VULKAN
+#define DETECTIVE_CONAN_SUPPORT_VULKAN 1
 #endif
 
 #include <stdint.h>

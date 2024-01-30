@@ -21,7 +21,7 @@ Here are instructions to integrate it with your project:
 ```
 
 # Usage
-Check out dev/test folder for a basic demonstration of how to use detective-conan library to detect GPU hang in Vulkan app.
+Check out [hello-world-vulkan.cpp](dev/test/hello-world-vulkan.cpp) for a demonstration of how to use detective-conan library to detect GPU hang in Vulkan app.
 
 # License
 This library is released under MIT license.
